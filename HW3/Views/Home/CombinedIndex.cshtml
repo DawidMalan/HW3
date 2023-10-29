@@ -1,0 +1,276 @@
+﻿@model HW3.Models.Combined
+@{
+    ViewBag.Title = "CombinedIndex";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.min.js" integrity="sha512-7U4rRB8aGAHGVad3u2jiC7GA5/1YhQcQjxKeaVms/bT66i3LVBMRcBI9KwABNWnxOSwulkuSXxZLGuyfvo7V1A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <style>
+
+        body {
+
+            background-image: url('@Url.Content("~/Pics/Home2.jpeg")');
+            background-size: 3000px 1200px;
+           
+            background-repeat: no-repeat;
+        }
+
+        /* Additional styling for content */
+
+        h2,  h3 {
+            color: white; /* Set the text color of h2 and h3 to white */
+        }
+       
+
+        /* Table header background */
+        th {
+            background-color: #f3e4c5; /* Light beige */
+        }
+
+        /* Table rows background */
+        tr {
+            background-color: #f5e6c8; /* Slightly lighter beige */
+        }
+
+        /* Text color */
+        table {
+            color: #4c3d29; /* Dark brown text on beige */
+        }
+
+        /* Button styles */
+        .btn-primary, .btn-info {
+            background-color: #d2b48c; /* Light brown */
+        }
+    </style>
+</head>
+<body>
+
+    <main class="container">
+
+        <div class="container">
+            <h2>Library Maintenance System</h2>
+
+            <p>
+
+                <button id="createBookButton" class="btn btn-primary">Create New Book</button>
+            </p>
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Books</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Page Count</th>
+                                <th>Point</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var book in Model.books)
+                            {
+                                <tr>
+                                    <td>@book.name</td>
+                                    <td>@book.pagecount</td>
+                                    <td>@book.point</td>
+                                    <td>A</td>
+
+                                    <td>
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item"><a class="page-link" href="#">6</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+
+                    <button id="createStudentButton" class="btn btn-primary">Create New Student</button>
+                    <h3>Students</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Surname</th>
+                                <th>Birthdate</th>
+                                <th>Gender</th>
+                                <th>Point</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var student in Model.students)
+                            {
+                                <tr>
+                                    <td>@student.name</td>
+                                    <td>@student.surname</td>
+                                    <td>@student.birthdate</td>
+                                    <td>@student.gender</td>
+                                    <td>@student.point</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <ul class="pagination">
+                        <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item"><a class="page-link" href="#">4</a></li>
+                        <li class="page-item"><a class="page-link" href="#">5</a></li>
+                        <li class="page-item"><a class="page-link" href="#">6</a></li>
+                        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+        </div>
+    </main>
+    <div id="myModal" class="modal fade" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Sample Async CRUD</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modal-content">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.7.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(function () {
+            // Function to handle pagination link clicks
+            $(".pagination .page-link").click(function (e) {
+                e.preventDefault();
+                var url = $(this).attr("href"); // Get the href attribute of the clicked link.
+
+                if (url === '#') {
+                    return; // Ignore clicks on "Previous" and "Next" if the link is disabled.
+                }
+
+                $.get(url, function (data) {
+                    // Handle the response data, e.g., update the table with new data.
+                });
+            });
+
+            // Rest of your script...
+        });
+    </script>
+    
+
+
+
+
+
+    <script>
+
+    $(function () {
+        // Function to handle "Create Book" button click event
+        $("#createBookButton").click(function (e) {
+            e.preventDefault();
+            var url = '@Url.Action("Create", "Books")'; // Replace with the actual URL to your "Create" action for books.
+
+            $.get(url, function (data) {
+                $("#modal-content").empty();
+                $("#modal-content").html(data);
+                $("#myModal").modal("show");
+            });
+        });
+
+        // Function to handle "Create Student" button click event
+        $("#createStudentButton").click(function (e) {
+            e.preventDefault();
+            var url = '@Url.Action("Create", "Students")'; // Replace with the actual URL to your "Create" action for students.
+
+            $.get(url, function (data) {
+                $("#modal-content").empty();
+                $("#modal-content").html(data);
+                $("#myModal").modal("show");
+            });
+        });
+
+        // Rest of your script...
+    });
+    </script>
+    <script>
+
+        // Handler for submit form within modal
+        $("#modal-content").on("submit", "form", function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr("action");
+            var formData = form.serialize();
+
+            $.post(url, formData, function (data) {
+                $("#myModal").modal("hide");
+                location.reload();
+            });
+        });
+
+        // Handler for details, delete, create, and create-lookup buttons
+        $(".details-link, .delete-link, .create-link, .create-lookup-link").on("click", function (e) {
+            e.preventDefault();
+            var url = $(this).data("url");
+
+            $.get(url, function (data) {
+                $("#modal-content").empty().html(data);
+                $("#myModal").modal("show");
+            });
+        });
+                });
+    </script>
+    <script>
+        $(function () {
+            // Function to handle Create links click event in the Combined View and Details modal
+            $(".create-link").click(function (e) {
+                e.preventDefault();
+                var url = $(this).data("url");
+
+                $.get(url, function (data) {
+                    $("#modal-content").empty();
+                    $("#modal-content").html(data);
+                    $("#myModal").modal("show");
+                });
+            });
+
+            // Function to handle form submission within the modal
+            $("#modal-content").on("submit", "form", function (e) {
+                e.preventDefault();
+                var form = $(this);
+                var url = form.attr("action");
+
+                var formData = form.serialize();
+
+                $.post(url, formData, function (data) {
+                    $("#myModal").modal("hide");
+                    location.reload();
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
+

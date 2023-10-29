@@ -1,0 +1,220 @@
+﻿@model List<HW3.Models.TopBorrowedBooks>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.tiny.cloud/1/fcgkgkxzy1gv1nyg25yboy6vkv9rxzpp5lqwwnbc1omzkw2c/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <title>Top Borrowed Books Report</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.tiny.cloud/1/fcgkgkxzy1gv1nyg25yboy6vkv9rxzpp5lqwwnbc1omzkw2c/tinymce/6/tinymce.min.js"
+            referrerpolicy="origin"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script> <!-- Add jsPDF library -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f3e4c5;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            display: inline-block;
+            border-radius: 4px;
+        }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'ai tinycomments mentions anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount checklist mediaembed casechange export formatpainter pageembed permanentpen footnotes advtemplate advtable advcode editimage tableofcontents mergetags powerpaste tinymcespellchecker autocorrect a11ychecker typography inlinecss',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | align lineheight | tinycomments | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+            tinycomments_mode: 'embedded',
+            tinycomments_author: 'Author name',
+            mergetags_list: [
+                { value: 'First.Name', title: 'First Name' },
+                { value: 'Email', title: 'Email' },
+            ],
+            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject("See docs to implement AI Assistant")),
+        });
+    </script>
+    <div>
+        <h2>Top Borrowed Books Report</h2>
+        <table>
+            <tr>
+                <th>Book ID</th>
+                <th>Book Title</th>
+                <th>Borrow Count</th>
+            </tr>
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.BookId</td>
+                    <td>@book.BookTitle</td>
+                    <td>@book.BorrowCount</td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div>
+        <h2>Top Borrowed Books Chart</h2>
+        <canvas id="chart" style="max-width: 400px;"></canvas>
+    </div>
+
+    <!-- Input field for custom filename -->
+    <div style="display: inline-block;">
+        <label for="customFilename">Custom Filename:</label>
+        <input type="text" id="customFilename" placeholder="Enter a custom filename" style="border: 1px solid #ccc; border-radius: 5px; padding: 5px;">
+    </div>
+    <br />
+    <!-- Dropdown for selecting file type -->
+    <div style="display: inline-block; margin-right: 10px;">
+        <label for="fileType">Select File Type:</label>
+        <select id="fileType" style="border: 1px solid #ccc; border-radius: 5px;">
+            <option value="pdf">PDF</option>
+            <option value="txt">TXT</option>
+            <option value="doc">DOC</option>
+        </select>
+    </div>
+
+    <!-- Button to download the report -->
+    <div>
+        <a href="#" id="downloadReport" class="btn btn-primary">Download Report</a>
+    </div>
+
+    <script>
+        // JavaScript to handle the report download with custom filename and file type
+        document.getElementById("downloadReport").addEventListener("click", function () {
+            var customFilename = document.getElementById("customFilename").value;
+            var fileType = document.getElementById("fileType").value;
+            // Redirect to the controller action with the custom filename and file type
+            var action;
+            if (fileType === "txt") {
+                window.location.href = "@Url.Action("DownloadTop5BooksReportTxt", "Chart")?filename=" + customFilename + "&fileType=" + fileType;
+            }
+            if (fileType === "doc") {
+                window.location.href = "@Url.Action("DownloadTop5BooksReportDoc", "Chart")?filename=" + customFilename + "&fileType=" + fileType;
+            }
+            if (fileType === "pdf") {
+                window.location.href = "@Url.Action("DownloadTop5BooksReport", "Chart")?filename=" + customFilename + "&fileType=" + fileType;
+            }
+        });
+    </script>
+
+    <script>
+        // JavaScript code for rendering the chart
+        var bookTitles = @Html.Raw(Json.Encode(Model.Select(b => b.BookTitle)));
+        var borrowCounts = @Html.Raw(Json.Encode(Model.Select(b => b.BorrowCount)));
+
+        var ctx = document.getElementById("chart").getContext("2d");
+
+        var chart = new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: bookTitles,
+                datasets: [{
+                    label: "Borrow Count",
+                    data: borrowCounts,
+                    backgroundColor: "rgba(75, 192, 192, 0.2)",
+                    borderColor: "rgba(75, 192, 192, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+    <div>
+
+
+    </div>
+
+    <!-- Table of Downloads -->
+    <div>
+        <h2>Downloads </h2>
+        <table>
+            <tr>
+                <th>File Name</th>
+                <th>File Type</th>
+                <th>Actions</th>
+            </tr>
+            @foreach (var download in ViewBag.Downloads)
+            {
+                <tr>
+                    <td>@download.FileName</td>
+                    <td>@download.FileType</td>
+                    <td>
+                        @Html.ActionLink("Redownload", "Download", new
+                        {
+                            filename = download.FileName,
+                            fileType = download.FileType
+                            })
+                        |
+                        <button type="button" class="btn btn-link" onclick="deleteFile('@download.FileName', '@download.FileType')">Delete</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <script>
+        function deleteFile(filename, fileType) {
+            if (confirm('Are you sure you want to delete this file?')) {
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("Delete", "Chart")",
+                    data: { filename: filename, fileType: fileType },
+                    success: function (result) {
+                        // Reload the "Chart" view or handle the response as needed
+                        window.location.href = "@Url.Action("Index", "Chart")";
+                    },
+                    error: function (error) {
+                        // Handle the error, if any
+                        console.error(error);
+                    }
+                });
+            }
+        }
+    </script>
+
+</body>
+</html>

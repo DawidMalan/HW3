@@ -1,0 +1,24 @@
+﻿@model List<HW3.Models.TopBorrowedBooks>
+
+<div>
+    <h2>Downloads</h2>
+    <table>
+        <tr>
+            <th>File Name</th>
+            <th>File Type</th>
+            <th>Actions</th>
+        </tr>
+        @foreach (var download in ViewBag.Downloads)
+        {
+            <tr>
+                <td>@download.FileName</td>
+                <td>@download.FileType</td>
+                <td>
+                    @Html.ActionLink("Redownload", "Download", new { filename = download.FileName, fileType = download.FileType })
+                    |
+                    <button type="button" class="btn btn-link" onclick="deleteFile('@download.FileName', '@download.FileType')">Delete</button>
+                </td>
+            </tr>
+        }
+    </table>
+</div>

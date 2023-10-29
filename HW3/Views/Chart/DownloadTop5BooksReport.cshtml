@@ -1,0 +1,18 @@
+﻿@model List<HW3.Models.TopBorrowedBooks>
+
+<h2>Top 5 Borrowed Books Report</h2>
+<table>
+    <tr>
+        <th>Book ID</th>
+        <th>Book Title</th>
+        <th>Borrow Count</th>
+    </tr>
+    @foreach (var book in Model)
+    {
+        <tr>
+            <td>@book.BookId</td>
+            <td>@book.BookTitle</td>
+            <td>@book.BorrowCount</td>
+        </tr>
+    }
+</table>

@@ -1,0 +1,30 @@
+﻿@model List<HW3.Models.SavedReport>
+
+<h2>Document Archive</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Report ID</th>
+            <th>File Name</th>
+            <th>File Type</th>
+            <th>Date Saved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var report in Model)
+        {
+            <tr>
+                <td>@report.ReportId</td>
+                <td>@report.FileName</td>
+                <td>@report.FileType</td>
+                <td>@report.DateSaved</td>
+                <td>
+                    <a href="@Url.Action("DownloadReport", new { id = report.ReportId })" class="btn btn-primary">Download</a>
+                    <a href="@Url.Action("DeleteReport", new { id = report.ReportId })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
